@@ -9,6 +9,8 @@
   "author": "deniz mehmed",
   "license": "ISC",
   "dependencies": {
+    "inquirer": "^6.2.0",
     "moment": "^2.22.2",
+    "mongodb": "^3.1.4"
   }
 }
