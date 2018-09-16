@@ -62,7 +62,7 @@ function mongoDumpFunction(selectedDb) {
 }
 
 function checkNodeModules() {
-    if (!sh.test('-e', './node_modules')) {
+    if (!shelljs.test('-e', './node_modules')) {
         throw ('Run npm install to install the libs I need to run your backup');
     }
 }
