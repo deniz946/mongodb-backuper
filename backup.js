@@ -41,15 +41,18 @@ function makeBackup(selectedDb) {
     const dbLocalFilesPath = `../${selectedDb}`;
 
     if (fs.existsSync(dbLocalFilesPath)) {
+        console.log('There are no folder for this db, creating...');
         mongoDumpFunction(selectedDb);
     } else {
+        console.log('We\'ve found backups folder for this db... backing up there');
         shelljs.mkdir(dbLocalFilesPath);
         mongoDumpFunction(selectedDb);
     }
 }
 
 function mongoDumpFunction(selectedDb) {
-    child = exec(`mongodump --db ${selectedDb} --out ../${selectedDb}/${selectedDb}-${today}`, (error, stdout, stderr) => {
-        console.log(`${selectedDb} backed up correctly`);
+    const pathToBackup = `../${selectedDb}/${selectedDb}-${today}`;
+    child = exec(`mongodump --db ${selectedDb} --out ${pathToBackup}`, (error, stdout, stderr) => {
+        console.log(`${selectedDb} backed up correctly in ${pathToBackup}`);
     })
 }
