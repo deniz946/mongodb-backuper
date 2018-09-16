@@ -1,13 +1,12 @@
 {
   "name": "mongo-backup-script",
   "version": "1.0.0",
-  "description": "Backup of my dbs",
+  "description": "Script to backup mongodb databases",
   "main": "backup.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "backup": "node backup.js"
   },
-  "author": "deniz mehmed",
+  "author": "Denis M.",
   "license": "ISC",
   "dependencies": {
     "inquirer": "^6.2.0",
