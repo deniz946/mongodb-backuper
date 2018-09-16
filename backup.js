@@ -1,16 +1,17 @@
 const exec = require('child_process').exec;
 const moment = require('moment');
 const path = require('path');
+const fs = require('fs');
 const today = moment().format('DD-MM-YYYY');
-const dbName2 = process.argv[2];
 const inquirer = require('inquirer');
-
+const shelljs = require('shelljs');
 
 const MongoClient = require('mongodb').MongoClient;
 const test = require('assert');
 const url = 'mongodb://localhost:27017';
 const dbName = 'test';
-MongoClient.connect(url, function (err, client) {
+console.log('Connecting to the database...');
+MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
     // Use the admin database for the operation
     const adminDb = client.db(dbName).admin();
     // List all the available databases
@@ -23,12 +24,9 @@ MongoClient.connect(url, function (err, client) {
         inquirer
             .prompt(questions)
             .then(function (answers) {
-                console.log(answers);
+                console.log(answers)
                 if (answers.selectedDb) {
-                    const db = answers.selectedDb;
-                    child = exec(`mongodump --db ${db} --out ../${db}-${today}`, (error, stdout, stderr) => {
-                        console.log(`${db} backed up correctly`);
-                    })
+                    makeBackup(answers.selectedDb);
                 } else {
                     console.warn('Error: You should indicate db name');
                     return;
@@ -37,25 +35,21 @@ MongoClient.connect(url, function (err, client) {
             })
     });
 });
-// MongoClient.connect(url, function(err, db) {
-//   // Use the admin database for the operation
-//   var adminDb = db.admin();
-//   // List all the available databases
-
-//   });
-// });
 
 
+function makeBackup(selectedDb) {
+    const dbLocalFilesPath = `../${selectedDb}`;
 
+    if (fs.existsSync(dbLocalFilesPath)) {
+        mongoDumpFunction(selectedDb);
+    } else {
+        shelljs.mkdir(dbLocalFilesPath);
+        mongoDumpFunction(selectedDb);
+    }
+}
 
-
-
-// if (dbName) {
-//     child = exec(`mongodump --db ${dbName} --out ../${dbName}-${today}`, (error, stdout, stderr) =>{
-//         console.log(`${dbName} backed up correctly`);
-//     })
-// } else {
-//     console.warn('Error: You should indicate db name');
-//     return;
-// }
-
+function mongoDumpFunction(selectedDb) {
+    child = exec(`mongodump --db ${selectedDb} --out ../${selectedDb}/${selectedDb}-${today}`, (error, stdout, stderr) => {
+        console.log(`${selectedDb} backed up correctly`);
+    })
+}
