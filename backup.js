@@ -4,21 +4,25 @@ const path = require('path');
 const today = moment().format('DD-MM-YYYY');
 const dbName = process.argv[2];
 const inquirer = require('inquirer');
-const mongoose = require('mongoose');
-// Connection url
+const MongoClient = require('mongodb').MongoClient;
+// Connection URL
+const url = 'mongodb://localhost:27017/test';
 
-mongoose.connect('mongodb://localhost/test');
+// Database Name
 
-mongoose.connection.on('open', function (ref) {
-    console.log('Connected to mongo server.');
-    //trying to get collection names
-    mongoose.connection.db.listCollections().toArray((error, collections) => { 
-        console.log(collections) 
-        mongoose.connection.close()
-    })
+// // Use connect method to connect to the server
+// MongoClient.connect(url, function (err, client) {
+//     console.log("Connected successfully to server");
+//     const db = client.db('ngClients');
+//     console.log(db);
+//     client.close();
+// });
 
-})
-// var url = 'mongodb://localhost:27017/test';
+
+
+mongoose.connection.on('error', function(error){
+  throw new Error(error);
+});
 // MongoClient.connect(url, function(err, db) {
 //   // Use the admin database for the operation
 //   var adminDb = db.admin();
@@ -28,7 +32,7 @@ mongoose.connection.on('open', function (ref) {
 //     const questions = [
 //         { type: 'list', name: 'selectedDb', message: 'Choose the db to backup', choices: avaibleDbs },
 //     ];
-    
+
 //     inquirer
 //         .prompt(questions)
 //         .then(function (answers) {
